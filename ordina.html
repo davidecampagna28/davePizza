@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="it">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Ordina a Domicilio - Pizzeria da Davide</title>
+    
+    <link rel="stylesheet" href="nicepage.css" media="screen">
+    <link rel="stylesheet" href="index.css" media="screen">
+    <link rel="stylesheet" href="style.css" media="screen"> 
+    
+    <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
+    
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i|Palanquin+Dark:400,500,600,700">
+    <meta name="theme-color" content="#e74c3c">
+</head>
+
+<body class="u-body u-xl-mode" data-lang="it">
+    
+    <header class="modern-header">
+        <a href="index.html" class="logo">Pizzeria <span>da Davide</span></a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="ordina.html" class="active">Ordina a Domicilio</a></li>
+                <li><a href="prenota.html">Prenota un Tavolo</a></li>
+            </ul>
+        </nav>
+        <div class="menu-toggle">☰</div>
+    </header>
+
+    <main class="container">
+        <h1>Ordina a Domicilio</h1>
+        <p style="text-align: center; color: var(--colore-testo-secondario);">
+            Seleziona le quantità e inserisci il tuo indirizzo. Il costo di consegna e il totale si aggiorneranno in tempo reale.
+        </p>
+        
+        <form id="order-form" action="#" method="POST" class="form-modern">
+            
+            <div id="menu-selections">
+                </div>
+
+            <h3 style="margin-top: 30px; color: var(--colore-primario) !important;">Dati di Consegna</h3>
+            <div class="form-group">
+                <label for="nome">Nome e Cognome</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="indirizzo">Indirizzo di Consegna</label>
+                <input type="text" id="indirizzo" name="indirizzo" placeholder="Es. Via Garibaldi 10, Imperia" required>
+            </div>
+
+            <div class="form-group">
+                <label for="telefono">Numero di Telefono</label>
+                <input type="tel" id="telefono" name="telefono" required>
+            </div>
+
+            <div class="total-summary" style="font-size: 1.2rem; color: var(--colore-testo-secondario); border:none; margin-top:0; padding-top:0;">
+                <span>Subtotale:</span>
+                <span id="order-subtotal">€ 0.00</span>
+            </div>
+            <div class="total-summary" style="font-size: 1.1rem; color: var(--colore-testo-secondario); border-top: 1px dashed #444; padding-top: 10px; margin-top: 10px;">
+                <span>Costo Consegna (Imperia: 2€, Diano: 4€, Altro: 6€):</span>
+                <span id="delivery-fee">€ 0.00</span>
+            </div>
+            <div class="total-summary" style="border-top: 2px solid var(--colore-primario); margin-top: 10px; padding-top: 10px; font-size: 1.6rem;">
+                <span>Totale Ordine:</span>
+                <span id="order-total">€ 0.00</span>
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Vai al Riepilogo Ordine</button>
+            <div id="message" style="color: var(--colore-primario); margin-top: 15px;"></div>
+
+        </form>
+    </main>
+
+    <footer class="u-align-center u-clearfix u-grey-80 u-footer u-footer-1" id="sec-97b7">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <p class="u-small-text u-text u-text-variant u-text-1">Pizzeria da Davide - La vera pizza a Imperia e Diano Marina.</p>
+        </div>
+    </footer>
+
+    <div id="cookie-banner">
+        <div class="cookie-content">
+            <p>Questo sito utilizza cookie tecnici per garantirti la migliore esperienza. Cliccando "Ho Capito", accetti il loro utilizzo.</p>
+            <button id="cookie-accept" class="btn btn-primary">Ho Capito</button>
+        </div>
+    </div>
+
+    <div id="summary-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-title">Riepilogo Ordine</h2>
+            <div id="modal-body">
+                </div>
+            <div class="modal-actions">
+                <button id="modal-cancel" class="btn btn-secondary" type="button">Annulla e Modifica</button>
+                <button id="modal-confirm" class="btn btn-primary" type="button">Conferma e Invia Ordine</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Dati Menu Completi (Devono corrispondere a quelli in index.html)
+        const menuData = {
+            pizze: [
+                { nome: "Margherita", ingredienti: "Pomodoro, Mozzarella, Basilico", prezzo: 7.00, id: "pizza1" },
+                { nome: "Diavola", ingredienti: "Pomodoro, Mozzarella, Salame Piccante, Peperoncino", prezzo: 9.50, id: "pizza2" },
+                { nome: "Vegetariana", ingredienti: "Pomodoro, Mozzarella, Zucchine, Melanzane, Peperoni", prezzo: 10.00, id: "pizza3" },
+                { nome: "Quattro Formaggi", ingredienti: "Mozzarella, Gorgonzola, Scamorza, Parmigiano", prezzo: 11.00, id: "pizza4" },
+                { nome: "Capricciosa", ingredienti: "Pomodoro, Mozzarella, Funghi, Prosciutto Cotto, Carciofi, Olive", prezzo: 11.50, id: "pizza5" },
+                { nome: "Marinara", ingredienti: "Pomodoro, Aglio, Origano (Senza Mozzarella)", prezzo: 6.50, id: "pizza6" },
+                { nome: "Napoli", ingredienti: "Pomodoro, Mozzarella, Acciughe, Capperi, Origano", prezzo: 9.00, id: "pizza7" }
+            ],
+            primi: [
+                { nome: "Spaghetti allo Scoglio", ingredienti: "Spaghetti, Frutti di mare freschi", prezzo: 14.00, id: "primo1" },
+                { nome: "Lasagne Classiche", ingredienti: "Ragù di carne, Besciamella, Parmigiano", prezzo: 12.00, id: "primo2" },
+                { nome: "Penne all'Arrabbiata", ingredienti: "Penne, Pomodoro, Aglio, Peperoncino", prezzo: 9.00, id: "primo3" },
+                { nome: "Tagliatelle al Ragù", ingredienti: "Pasta fresca all'uovo, Ragù alla bolognese", prezzo: 13.00, id: "primo4" },
+                { nome: "Risotto ai Funghi Porcini", ingredienti: "Riso Carnaroli, Funghi porcini, Parmigiano", prezzo: 15.00, id: "primo5" }
+            ],
+            bevande: [
+                { nome: "Acqua Naturale 1L", ingredienti: "Classica acqua naturale", prezzo: 2.00, id: "bibita1" },
+                { nome: "Coca Cola 33cl", ingredienti: "Lattina da 33cl", prezzo: 3.50, id: "bibita2" },
+                { nome: "Fanta 33cl", ingredienti: "Lattina da 33cl", prezzo: 3.50, id: "bibita3" },
+                { nome: "Birra Artigianale 50cl", ingredienti: "Selezione di birra Ipa locale", prezzo: 6.00, id: "bibita4" },
+                { nome: "Vino della Casa 1L (Rosso/Bianco)", ingredienti: "Selezione locale in caraffa", prezzo: 8.00, id: "bibita5" },
+                { nome: "Sprite 33cl", ingredienti: "Lattina da 33cl", prezzo: 3.50, id: "bibita6" },
+                { nome: "Birra Moretti 66cl", ingredienti: "Bottiglia da 66cl", prezzo: 5.00, id: "bibita7" },
+                { nome: "Vino Bianco (Bottiglia)", ingredienti: "Pigato ligure, 75cl", prezzo: 18.00, id: "bibita8" }
+            ]
+        };
+
+        const allItems = [...menuData.pizze, ...menuData.primi, ...menuData.bevande];
+
+        function getDeliveryFee() {
+            const indirizzo = $('#indirizzo').val().toLowerCase();
+            let fee = 0;
+            if (indirizzo.trim() === '') return 0;
+            if (indirizzo.includes('imperia')) fee = 2.00;
+            else if (indirizzo.includes('diano marina')) fee = 4.00;
+            else fee = 6.00;
+            return fee;
+        }
+
+        function updateTotals() {
+            let subtotal = 0;
+            allItems.forEach(item => {
+                const quantity = parseInt($(`#qty-${item.id}`).val()) || 0;
+                subtotal += quantity * item.prezzo;
+            });
+            let deliveryFee = (subtotal > 0) ? getDeliveryFee() : 0;
+            const total = subtotal + deliveryFee;
+
+            $('#order-subtotal').text(`€ ${subtotal.toFixed(2)}`);
+            $('#delivery-fee').text(`€ ${deliveryFee.toFixed(2)}`);
+            $('#order-total').text(`€ ${total.toFixed(2)}`);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const $menuSelections = $('#menu-selections');
+            let html = '';
+
+            function renderSection(title, items) {
+                html += `
+                    <h3 style="margin-top: 30px;">${title}</h3>
+                    <div style="border-bottom: 1px solid #444;">
+                `;
+                items.forEach(item => {
+                    html += `
+                        <div class="order-list-item">
+                            <div class="order-item-details">
+                                <strong>${item.nome}</strong> 
+                                <span style="font-size:0.9em; color:var(--colore-primario); margin-left:10px;">(€ ${item.prezzo.toFixed(2)})</span>
+                                <p>${item.ingredienti}</p>
+                            </div>
+                            <div style="display:flex; align-items:center;">
+                                <label for="qty-${item.id}" style="margin-right:10px; font-weight:normal; margin-bottom:0; color:var(--colore-testo-secondario);">Qtà:</label>
+                                <input type="number" id="qty-${item.id}" name="item-${item.id}" value="0" min="0" data-prezzo="${item.prezzo}" class="item-quantity">
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            renderSection('Pizze', menuData.pizze);
+            renderSection('Primi Piatti', menuData.primi);
+            renderSection('Bevande', menuData.bevande);
+            $menuSelections.html(html);
+
+            // Inizializza i totali al caricamento
+            updateTotals();
+
+            $('.item-quantity').on('change keyup', updateTotals);
+            $('#indirizzo').on('keyup change', updateTotals);
+            
+            const $modal = $('#summary-modal');
+            const $modalTitle = $('#modal-title');
+            const $modalBody = $('#modal-body');
+            const $form = $('#order-form');
+
+            // Logica di invio MODIFICATA per il modale
+            $form.on('submit', function(e) {
+                e.preventDefault(); 
+                $('#message').text(''); 
+                
+                // 1. Validazione
+                const subtotal = parseFloat($('#order-subtotal').text().replace('€ ', ''));
+                if (subtotal === 0) {
+                    $('#message').text("Per favore, seleziona almeno un articolo da ordinare.").css('color', 'red');
+                    return;
+                }
+                if ($('#nome').val() === '' || $('#indirizzo').val() === '' || $('#telefono').val() === '') {
+                     $('#message').text("Per favore, compila tutti i dati di consegna.").css('color', 'red');
+                    return;
+                }
+
+                // 2. Popola il Modale
+                $modalTitle.text('Riepilogo Ordine');
+                let summaryHTML = '<h3>Prodotti Ordinati:</h3><ul style="list-style: disc; margin-left: 20px;">';
+                allItems.forEach(item => {
+                    const quantity = parseInt($(`#qty-${item.id}`).val()) || 0;
+                    if (quantity > 0) {
+                        summaryHTML += `<li>${quantity} x ${item.nome} (${(quantity * item.prezzo).toFixed(2)} €)</li>`;
+                    }
+                });
+                summaryHTML += '</ul><h3 style="margin-top:20px;">Dati Consegna:</h3>';
+                summaryHTML += `<p><strong>Nome:</strong> ${$('#nome').val()}</p>`;
+                summaryHTML += `<p><strong>Indirizzo:</strong> ${$('#indirizzo').val()}</p>`;
+                summaryHTML += `<p><strong>Telefono:</strong> ${$('#telefono').val()}</p>`;
+                summaryHTML += `<p><strong>Costo Spedizione:</strong> ${$('#delivery-fee').text()}</p>`;
+                summaryHTML += `<div class="summary-total"><strong>Totale Finale:</strong> ${$('#order-total').text()}</div>`;
+                
+                $modalBody.html(summaryHTML);
+                
+                // 3. Mostra il Modale
+                $modal.addClass('show');
+            });
+            
+            // Chiusura Modale (Annulla/Modifica)
+            $('#modal-cancel').on('click', () => $modal.removeClass('show'));
+            
+            // Conferma Finale 
+            $('#modal-confirm').on('click', function() {
+                const total = $('#order-total').text();
+                
+                $modal.removeClass('show'); // Chiude il modale
+                
+                // Simula l'invio e ripristina il modulo
+                $('#message').text(`Ordine di ${total} inviato con successo! Sarai ricontattato entro 5 minuti.`).css('color', 'green');
+                setTimeout(() => $('#message').text(''), 5000); 
+                $form.trigger('reset');
+                updateTotals(); // Resetta i totali a 0.00
+            });
+
+            // --- Gestione Cookie Banner ---
+            const cookieBanner = document.getElementById('cookie-banner');
+            const cookieAccept = document.getElementById('cookie-accept');
+            if (cookieBanner && cookieAccept) {
+                if (!localStorage.getItem('cookiesAccepted')) {
+                    // MODIFICA: Rimosso setTimeout per far apparire subito il banner
+                    cookieBanner.classList.add('show');
+                }
+                cookieAccept.addEventListener('click', () => {
+                    localStorage.setItem('cookiesAccepted', 'true');
+                    cookieBanner.classList.remove('show');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

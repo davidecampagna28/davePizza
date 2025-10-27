@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html style="font-size: 16px;" lang="it">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Prenota un Tavolo - Pizzeria da Davide</title>
+    
+    <link rel="stylesheet" href="nicepage.css" media="screen">
+    <link rel="stylesheet" href="index.css" media="screen">
+    <link rel="stylesheet" href="style.css" media="screen"> 
+    
+    <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
+    <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
+    
+    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i|Palanquin+Dark:400,500,600,700">
+    <meta name="theme-color" content="#e74c3c">
+</head>
+
+<body class="u-body u-xl-mode" data-lang="it">
+    
+    <header class="modern-header">
+        <a href="index.html" class="logo">Pizzeria <span>da Davide</span></a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="ordina.html">Ordina a Domicilio</a></li>
+                <li><a href="prenota.html" class="active">Prenota un Tavolo</a></li>
+            </ul>
+        </nav>
+        <div class="menu-toggle">☰</div>
+    </header>
+
+    <main class="container">
+        <h1>Prenota un Tavolo</h1>
+        <p style="text-align: center; color: var(--colore-testo-secondario);">
+            Seleziona data, ora e numero di persone. I tavoli rossi sono attualmente occupati per l'orario richiesto.
+        </p>
+        
+        <h2 style="margin-top: 40px;">Dettagli Prenotazione</h2>
+        <form id="reservation-form" action="#" method="POST" class="form-modern">
+            
+            <div class="form-group">
+                <label for="nome">Nome e Cognome</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="telefono">Numero di Telefono</label>
+                <input type="tel" id="telefono" name="telefono" required>
+            </div>
+
+            <div class="form-group">
+                <label for="data">Data</label>
+                <input type="date" id="data" name="data" required>
+            </div>
+
+            <div class="form-group">
+                <label for="ora">Ora</label>
+                <input type="time" id="ora" name="ora" required>
+            </div>
+
+            <div class="form-group">
+                <label for="persone">Numero di Persone (Max 8)</label>
+                <input type="number" id="persone" name="persone" min="1" max="8" value="2" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Verifica Disponibilità e Prenota</button>
+            <div id="reservation-message" style="color: var(--colore-primario); margin-top: 15px;"></div>
+
+        </form>
+
+        <h2 style="margin-top: 40px;">Mappa Tavoli (15 Tavoli)</h2>
+        <div id="table-map" class="table-map-container">
+            </div>
+
+        <p style="text-align: center; font-size: 0.9em; margin-top: 15px; color: var(--colore-testo-secondario);">
+            **NOTA:** Questa è una simulazione. I tavoli rossi (occupati) vengono generati casualmente all'apertura della pagina.
+        </p>
+    </main>
+
+    <footer class="u-align-center u-clearfix u-grey-80 u-footer u-footer-1" id="sec-97b7">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <p class="u-small-text u-text u-text-variant u-text-1">Pizzeria da Davide - La vera pizza a Imperia e Diano Marina.</p>
+        </div>
+    </footer>
+
+    <div id="cookie-banner">
+        <div class="cookie-content">
+            <p>Questo sito utilizza cookie tecnici per garantirti la migliore esperienza. Cliccando "Ho Capito", accetti il loro utilizzo.</p>
+            <button id="cookie-accept" class="btn btn-primary">Ho Capito</button>
+        </div>
+    </div>
+    
+    <div id="summary-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 id="modal-title">Riepilogo Prenotazione</h2>
+            <div id="modal-body">
+                </div>
+            <div class="modal-actions">
+                <button id="modal-cancel" class="btn btn-secondary" type="button">Annulla e Modifica</button>
+                <button id="modal-confirm" class="btn btn-primary" type="button">Conferma Prenotazione</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const tavoli = [
+            { id: 1, capacita: 6, stato: 'available', nomePrenotazione: '' }, { id: 2, capacita: 6, stato: 'available', nomePrenotazione: '' }, { id: 3, capacita: 6, stato: 'available', nomePrenotazione: '' },
+            { id: 4, capacita: 6, stato: 'available', nomePrenotazione: '' }, { id: 5, capacita: 6, stato: 'available', nomePrenotazione: '' },
+            { id: 6, capacita: 5, stato: 'available', nomePrenotazione: '' }, { id: 7, capacita: 5, stato: 'available', nomePrenotazione: '' }, { id: 8, capacita: 5, stato: 'available', nomePrenotazione: '' },
+            { id: 9, capacita: 5, stato: 'available', nomePrenotazione: '' }, { id: 10, capacita: 5, stato: 'available', nomePrenotazione: '' },
+            { id: 11, capacita: 5, stato: 'available', nomePrenotazione: '' }, { id: 12, capacita: 5, stato: 'available', nomePrenotazione: '' }, { id: 13, capacita: 5, stato: 'available', nomePrenotazione: '' },
+            { id: 14, capacita: 5, stato: 'available', nomePrenotazione: '' }, { id: 15, capacita: 5, stato: 'available', nomePrenotazione: '' }
+        ];
+        
+        let tavoloTrovato = null; // Variabile globale per tenere traccia del tavolo trovato prima della conferma
+
+        // Funzione per simulare l'occupazione casuale iniziale all'apertura della pagina
+        function initializeTables() {
+            // Marca 3-5 tavoli come occupati casualmente
+            const reservedCount = Math.floor(Math.random() * 3) + 3; 
+            const indices = Array.from({ length: tavoli.length }, (_, i) => i);
+            
+            for (let i = 0; i < reservedCount; i++) {
+                const randomIndex = indices.splice(Math.floor(Math.random() * indices.length), 1)[0];
+                if (randomIndex !== undefined) {
+                    tavoli[randomIndex].stato = 'reserved';
+                    tavoli[randomIndex].nomePrenotazione = 'Occupato'; // Segnaposto
+                }
+            }
+        }
+
+        function renderTableMap() {
+            const $map = $('#table-map');
+            $map.empty();
+            tavoli.forEach(tavolo => {
+                const classState = tavolo.stato === 'reserved' ? 'table-reserved' : 'table-available';
+                const nome = tavolo.nomePrenotazione ? tavolo.nomePrenotazione : '';
+                $map.append(
+                    `<div id="table-${tavolo.id}" class="table-element ${classState}" data-id="${tavolo.id}" data-capacita="${tavolo.capacita}">
+                        <span>Tavolo ${tavolo.id}</span>
+                        <span class="capacity">(${tavolo.capacita} posti)</span>
+                        <span class="booking-name">${nome}</span> 
+                    </div>`
+                );
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTables();
+            renderTableMap();
+
+            const $modal = $('#summary-modal');
+            const $modalTitle = $('#modal-title');
+            const $modalBody = $('#modal-body');
+            const $form = $('#reservation-form');
+            const $message = $('#reservation-message');
+
+            // Logica di invio MODIFICATA per il modale e la casualità
+            $form.on('submit', function(e) {
+                e.preventDefault(); 
+                $message.text(''); 
+                tavoloTrovato = null; 
+
+                // 1. Validazione Form
+                if ($('#nome').val() === '' || $('#data').val() === '' || $('#ora').val() === '' || $('#telefono').val() === '') {
+                     $message.text("Per favore, compila tutti i campi obbligatori.").css('color', 'red');
+                    return;
+                }
+                
+                const persone = parseInt($('#persone').val());
+                
+                // 2. Simula rifiuto occasionale (es. 10% di probabilità)
+                if (Math.random() < 0.1) {
+                    $message.text("Spiacenti, a causa di un elevato numero di richieste, ti suggeriamo di provare a cambiare l'orario o la data.").css('color', 'red');
+                    return;
+                }
+                
+                // 3. Cerca TUTTI i tavoli disponibili che soddisfano la capacità
+                const tavoliLiberiAdatti = tavoli.filter(t => t.stato === 'available' && t.capacita >= persone);
+
+                if (tavoliLiberiAdatti.length > 0) {
+                    // 4. Scegli un tavolo a caso tra quelli adatti
+                    const randomIndex = Math.floor(Math.random() * tavoliLiberiAdatti.length);
+                    tavoloTrovato = tavoliLiberiAdatti[randomIndex]; 
+                    
+                    // 5. Popola il Modale
+                    $modalTitle.text('Riepilogo Prenotazione');
+                    let summaryHTML = `<p><strong>Nome:</strong> ${$('#nome').val()}</p>`;
+                    summaryHTML += `<p><strong>Telefono:</strong> ${$('#telefono').val()}</p>`;
+                    summaryHTML += `<p><strong>Data:</strong> ${$('#data').val()}</p>`;
+                    summaryHTML += `<p><strong>Ora:</strong> ${$('#ora').val()}</p>`;
+                    summaryHTML += `<p><strong>Persone:</strong> ${persone}</p>`;
+                    summaryHTML += `<div class="summary-total"><strong>Tavolo Assegnato:</strong> Tavolo ${tavoloTrovato.id} (${tavoloTrovato.capacita} posti)</div>`;
+                    
+                    $modalBody.html(summaryHTML);
+                    
+                    // 6. Mostra il Modale
+                    $modal.addClass('show');
+
+                } else {
+                    $message.text("Spiacenti, non abbiamo tavoli liberi che possano ospitare " + persone + " persone. Prova a ridurre il numero di persone o cambia l'orario.").css('color', 'red');
+                }
+            });
+
+            // Chiusura Modale (Annulla/Modifica)
+            $('#modal-cancel').on('click', () => {
+                $modal.removeClass('show');
+                tavoloTrovato = null; // Annulla la selezione
+            });
+            
+            // Conferma Finale 
+            $('#modal-confirm').on('click', function() {
+                if (!tavoloTrovato) return; 
+                
+                const nome = $('#nome').val();
+                
+                // 1. Simula la prenotazione (ora è definitiva)
+                const tavoloIndex = tavoli.findIndex(t => t.id === tavoloTrovato.id);
+                if (tavoloIndex !== -1) {
+                    tavoli[tavoloIndex].stato = 'reserved';
+                    tavoli[tavoloIndex].nomePrenotazione = nome; 
+                }
+
+                // 2. Aggiorna la mappa visivamente
+                const $tableElement = $(`#table-${tavoloTrovato.id}`);
+                $tableElement.removeClass('table-available').addClass('table-reserved');
+                $tableElement.find('.booking-name').text(nome);
+                
+                $modal.removeClass('show'); // Chiude il modale
+                
+                // Messaggio di successo e reset
+                $message.text(`Prenotazione confermata per ${nome} al Tavolo ${tavoloTrovato.id}! Ti contatteremo a breve.`).css('color', 'green');
+                $form.trigger('reset');
+                tavoloTrovato = null; // Pulisce
+            });
+
+            // --- Gestione Cookie Banner ---
+            const cookieBanner = document.getElementById('cookie-banner');
+            const cookieAccept = document.getElementById('cookie-accept');
+            if (cookieBanner && cookieAccept) {
+                if (!localStorage.getItem('cookiesAccepted')) {
+                    // MODIFICA: Rimosso setTimeout per far apparire subito il banner
+                    cookieBanner.classList.add('show');
+                }
+                cookieAccept.addEventListener('click', () => {
+                    localStorage.setItem('cookiesAccepted', 'true');
+                    cookieBanner.classList.remove('show');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

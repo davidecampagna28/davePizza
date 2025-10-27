@@ -1,0 +1,439 @@
+/*
+ * FOGLIO DI STILE MODERNO (style.css)
+ */
+
+/* Variabili Colore */
+:root {
+    --colore-primario: #e74c3c; 
+    --colore-secondario: #3498db; 
+    --colore-sfondo: #121212;     
+    --colore-superficie: #1e1e1e; 
+    --colore-testo-primario: #f0f0f0; 
+    --colore-testo-secondario: #a0a0a0; 
+}
+
+/* Miglioramenti Globali */
+body, .u-body {
+    font-family: 'Open Sans', sans-serif !important;
+    background-color: var(--colore-sfondo) !important;
+    color: var(--colore-testo-primario) !important;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Palanquin Dark', sans-serif !important;
+    color: var(--colore-primario) !important;
+}
+
+/* Rende le sezioni esistenti più leggibili */
+.u-section-1 {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.u-section-2, .u-section-3, 
+.u-section-4, .u-section-5, .u-section-6, 
+.u-section-7, .u-section-8 {
+    background-color: var(--colore-sfondo) !important; 
+    border-bottom: 1px solid #222; 
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+/* CORREZIONE TESTO SCURO */
+.u-text, p {
+    color: var(--colore-testo-secondario) !important;
+}
+.u-section-2 .u-text, .u-section-3 .u-text, .u-section-4 .u-text,
+.u-section-5 .u-text, .u-section-6 .u-text, .u-section-7 .u-text,
+.u-section-8 .u-text,
+.u-section-2 p, .u-section-3 p, .u-section-4 p,
+.u-section-5 p, .u-section-6 p, .u-section-7 p,
+.u-section-8 p {
+    color: var(--colore-testo-secondario) !important;
+}
+.u-text-body-alt-color {
+    color: #FFFFFF !important;
+}
+
+/* NUOVO HEADER */
+.modern-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--colore-superficie);
+    border-bottom: 2px solid var(--colore-primario);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.modern-header .logo {
+    text-decoration: none;
+    font-family: 'Palanquin Dark', sans-serif;
+    font-size: 1.8rem;
+    color: var(--colore-testo-primario);
+    font-weight: 600;
+}
+.modern-header .logo span {
+    color: var(--colore-primario);
+}
+.modern-header nav ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+.modern-header nav li {
+    margin-left: 20px;
+}
+.modern-header nav a {
+    text-decoration: none;
+    color: var(--colore-testo-secondario);
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+.modern-header nav a:hover,
+.modern-header nav a.active {
+    color: var(--colore-testo-primario);
+    background-color: var(--colore-primario);
+}
+.menu-toggle {
+    display: none;
+    font-size: 2rem;
+    cursor: pointer;
+}
+@media (max-width: 767px) {
+    .modern-header nav ul { display: none; }
+    .menu-toggle { display: block; }
+}
+
+
+/* STILI PER INDEX.HTML (Menu a Card) */
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.menu-item-card {
+    background-color: var(--colore-superficie); 
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-left: 5px solid var(--colore-primario); 
+}
+.menu-item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.7);
+}
+
+.menu-item-card h4 {
+    color: var(--colore-testo-primario) !important; 
+    margin-top: 0;
+    margin-bottom: 5px;
+    font-size: 1.4rem;
+}
+
+.item-price {
+    font-weight: 700;
+    color: var(--colore-primario);
+    font-size: 1.2rem;
+    display: block; 
+    margin-top: 10px;
+}
+
+/* Stili per (u-section-8) - Inclusi per compatibilità */
+.u-section-8 .u-list-item {
+    background-color: var(--colore-superficie) !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* NUOVI STILI PER MODULI (ORDINA / PRENOTA) */
+.container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: var(--colore-superficie);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.form-modern .form-group {
+    margin-bottom: 20px;
+}
+.form-modern .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--colore-testo-primario);
+}
+.form-modern .form-group input,
+.form-modern .form-group textarea,
+.form-modern .form-group select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #333; 
+    color: var(--colore-testo-primario);
+    font-size: 1rem;
+    box-sizing: border-box; 
+}
+.form-modern .form-group input:focus,
+.form-modern .form-group textarea:focus,
+.form-modern .form-group select:focus {
+    border-color: var(--colore-primario);
+    outline: none;
+    box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+}
+
+/* Stile Pulsanti CTA */
+.btn {
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    display: inline-block;
+    margin: 5px;
+}
+.btn-primary {
+    background-color: var(--colore-primario);
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: #c0392b; 
+    transform: translateY(-2px);
+}
+.btn-secondary {
+    background-color: transparent;
+    color: #fff;
+    border: 2px solid #fff;
+}
+.btn-secondary:hover {
+    background-color: #fff;
+    color: var(--colore-primario);
+}
+.cta-buttons {
+    margin-top: 30px;
+}
+
+/* Modulo Prenota - Mappa Tavoli */
+.table-map-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    background-color: #333;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #555;
+}
+.table-element {
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--colore-testo-primario);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    cursor: default;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+}
+.table-element span {
+    display: block;
+}
+.table-element .capacity {
+    font-size: 0.85em;
+    font-weight: 400;
+    color: var(--colore-testo-secondario);
+    margin-top: 5px;
+}
+/* Tavolo Libero */
+.table-available {
+    background-color: #27ae60; 
+    border: 1px solid #2ecc71;
+}
+/* Tavolo Occupato */
+.table-reserved {
+    background-color: var(--colore-primario); 
+    border: 1px solid #c0392b;
+    opacity: 0.8;
+}
+/* Nome Prenotazione per simulazione iniziale */
+.table-element .booking-name {
+    font-size: 0.9em;
+    font-weight: 700;
+    color: #fff;
+    margin-top: 8px;
+    word-break: break-word;
+}
+
+/* Modulo Ordina - Stile List Item (Necessario per Ordina.html) */
+.order-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #333;
+    transition: background-color 0.2s;
+}
+.order-list-item:hover {
+    background-color: #252525; /* Sfondo leggero al passaggio del mouse */
+}
+.order-list-item:last-child {
+    border-bottom: none;
+}
+.order-list-item input.item-quantity {
+    width: 70px;
+    padding: 8px;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background-color: #333; 
+    color: var(--colore-testo-primario); 
+    font-size: 1rem;
+    box-sizing: border-box; 
+}
+.order-item-details strong {
+    color: var(--colore-testo-primario);
+    font-size: 1.1rem;
+}
+.order-item-details p {
+    color: var(--colore-testo-secondario) !important;
+    font-size: 0.9em;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+.total-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    margin-top: 20px;
+    padding-top: 10px;
+}
+
+/* STILI MODAL RIEPILOGO */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 3000;
+    display: none; 
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+.modal-overlay.show {
+    display: flex; 
+}
+.modal-content {
+    background-color: var(--colore-superficie);
+    padding: 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    animation: slideIn 0.3s ease;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes slideIn {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+.modal-content h2 {
+    margin-top: 0;
+    color: var(--colore-primario);
+}
+#modal-body p {
+    color: var(--colore-testo-primario) !important;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 10px;
+}
+#modal-body strong {
+    color: var(--colore-testo-secondario);
+    width: 120px;
+    display: inline-block;
+}
+.modal-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.summary-total {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--colore-primario);
+    border-top: 1px solid #444;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+.summary-total strong {
+    color: var(--colore-primario);
+}
+
+/* STILI COOKIE BANNER */
+#cookie-banner {
+    position: fixed;
+    bottom: -100%; 
+    left: 0;
+    right: 0;
+    background-color: var(--colore-superficie);
+    color: var(--colore-testo-primario);
+    padding: 20px;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
+    z-index: 2000;
+    transition: bottom 0.5s ease;
+}
+#cookie-banner.show {
+    bottom: 0; 
+}
+.cookie-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 900px;
+    margin: 0 auto;
+}
+.cookie-content p {
+    margin: 0;
+    margin-right: 20px;
+    color: var(--colore-testo-secondario) !important;
+    font-size: 0.9rem;
+}
+@media (max-width: 767px) {
+    .cookie-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .cookie-content p {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    #cookie-accept {
+        width: 100%;
+        text-align: center;
+    }
+}
