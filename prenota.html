@@ -9,9 +9,7 @@
     <link rel="stylesheet" href="index.css" media="screen">
     <link rel="stylesheet" href="style.css" media="screen"> 
     
-    <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
-    <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
-    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i|Palanquin+Dark:400,500,600,700">
     <meta name="theme-color" content="#e74c3c">
 </head>
@@ -103,6 +101,8 @@
         </div>
     </div>
 
+    <a href="#" id="scroll-to-top" class="btn btn-primary">↑</a>
+
 
     <script>
         const tavoli = [
@@ -147,7 +147,8 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        // Ho usato $(document).ready() per coerenza con gli altri file
+        $(document).ready(function() {
             initializeTables();
             renderTableMap();
 
@@ -192,7 +193,7 @@
                     summaryHTML += `<p><strong>Data:</strong> ${$('#data').val()}</p>`;
                     summaryHTML += `<p><strong>Ora:</strong> ${$('#ora').val()}</p>`;
                     summaryHTML += `<p><strong>Persone:</strong> ${persone}</p>`;
-                    summaryHTML += `<div class="summary-total"><strong>Tavolo Assegnato:</strong> Tavolo ${tavoloTrovato.id} (${tavoloTrovato.capacita} posti)</div>`;
+                    summaryHTML += `<div class="summary-total" style="border:none; padding-top:5px; margin-top:10px;"><strong>Tavolo Assegnato:</strong> Tavolo ${tavoloTrovato.id} (${tavoloTrovato.capacita} posti)</div>`;
                     
                     $modalBody.html(summaryHTML);
                     
@@ -236,19 +237,28 @@
                 tavoloTrovato = null; // Pulisce
             });
 
-            // --- Gestione Cookie Banner ---
-            const cookieBanner = document.getElementById('cookie-banner');
-            const cookieAccept = document.getElementById('cookie-accept');
-            if (cookieBanner && cookieAccept) {
-                if (!localStorage.getItem('cookiesAccepted')) {
-                    // MODIFICA: Rimosso setTimeout per far apparire subito il banner
-                    cookieBanner.classList.add('show');
-                }
-                cookieAccept.addEventListener('click', () => {
-                    localStorage.setItem('cookiesAccepted', 'true');
-                    cookieBanner.classList.remove('show');
-                });
+            // --- Gestione Cookie/Scroll/Mobile (copiato da index.html) ---
+            const $banner = $('#cookie-banner');
+            if (!localStorage.getItem('cookiesAccepted')) {
+                setTimeout(() => $banner.addClass('show'), 500);
             }
+            $('#cookie-accept').on('click', () => {
+                localStorage.setItem('cookiesAccepted', 'true');
+                $banner.removeClass('show');
+            });
+
+            var $scrollTopBtn = $('#scroll-to-top');
+            $(window).on('scroll', function() {
+                if ($(window).scrollTop() > 300) { $scrollTopBtn.fadeIn(); } else { $scrollTopBtn.fadeOut(); }
+            });
+            $scrollTopBtn.on('click', function(e) {
+                e.preventDefault();
+                $('html, body').animate({ scrollTop: 0 }, 500); 
+            });
+            
+            $('.menu-toggle').on('click', function() {
+                $(this).siblings('nav').find('ul').slideToggle(); 
+            });
         });
     </script>
 </body>

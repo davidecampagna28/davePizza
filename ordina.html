@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="index.css" media="screen">
     <link rel="stylesheet" href="style.css" media="screen"> 
     
-    <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
-    <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i|Palanquin+Dark:400,500,600,700">
     <meta name="theme-color" content="#e74c3c">
@@ -100,18 +99,19 @@
         </div>
     </div>
 
+    <a href="#" id="scroll-to-top" class="btn btn-primary">↑</a>
 
     <script>
-        // Dati Menu Completi (Devono corrispondere a quelli in index.html)
+        // Dati Menu Completi (Questo era GIA' CORRETTO)
         const menuData = {
             pizze: [
-                { nome: "Margherita", ingredienti: "Pomodoro, Mozzarella, Basilico", prezzo: 7.00, id: "pizza1" },
-                { nome: "Diavola", ingredienti: "Pomodoro, Mozzarella, Salame Piccante, Peperoncino", prezzo: 9.50, id: "pizza2" },
-                { nome: "Vegetariana", ingredienti: "Pomodoro, Mozzarella, Zucchine, Melanzane, Peperoni", prezzo: 10.00, id: "pizza3" },
-                { nome: "Quattro Formaggi", ingredienti: "Mozzarella, Gorgonzola, Scamorza, Parmigiano", prezzo: 11.00, id: "pizza4" },
-                { nome: "Capricciosa", ingredienti: "Pomodoro, Mozzarella, Funghi, Prosciutto Cotto, Carciofi, Olive", prezzo: 11.50, id: "pizza5" },
-                { nome: "Marinara", ingredienti: "Pomodoro, Aglio, Origano (Senza Mozzarella)", prezzo: 6.50, id: "pizza6" },
-                { nome: "Napoli", ingredienti: "Pomodoro, Mozzarella, Acciughe, Capperi, Origano", prezzo: 9.00, id: "pizza7" }
+                { nome: "Margherita", ingredienti: "Pomodoro, Mozzarella, Basilico", prezzo: 7.00, id: "pizza1", immagine: "images/pizza-margherita.jpg" },
+                { nome: "Diavola", ingredienti: "Pomodoro, Mozzarella, Salame Piccante, Peperoncino", prezzo: 9.50, id: "pizza2", immagine: "images/pizza-diavola.jpg" },
+                { nome: "Vegetariana", ingredienti: "Pomodoro, Mozzarella, Zucchine, Melanzane, Peperoni", prezzo: 10.00, id: "pizza3", immagine: "images/pizza-vegetariana.jpg" },
+                { nome: "Quattro Formaggi", ingredienti: "Mozzarella, Gorgonzola, Scamorza, Parmigiano", prezzo: 11.00, id: "pizza4", immagine: "images/pizza-quattro-formaggi.jpg" },
+                { nome: "Capricciosa", ingredienti: "Pomodoro, Mozzarella, Funghi, Prosciutto Cotto, Carciofi, Olive", prezzo: 11.50, id: "pizza5", immagine: "images/pizza-capricciosa.jpg" },
+                { nome: "Marinara", ingredienti: "Pomodoro, Aglio, Origano (Senza Mozzarella)", prezzo: 6.50, id: "pizza6", immagine: "images/pizza-marinara.jpg" },
+                { nome: "Napoli", ingredienti: "Pomodoro, Mozzarella, Acciughe, Capperi, Origano", prezzo: 9.00, id: "pizza7", immagine: "images/pizza-napoli.jpg" }
             ],
             primi: [
                 { nome: "Spaghetti allo Scoglio", ingredienti: "Spaghetti, Frutti di mare freschi", prezzo: 14.00, id: "primo1" },
@@ -133,6 +133,7 @@
         };
 
         const allItems = [...menuData.pizze, ...menuData.primi, ...menuData.bevande];
+        let currentOrder = {}; // Per il modale
 
         function getDeliveryFee() {
             const indirizzo = $('#indirizzo').val().toLowerCase();
@@ -146,9 +147,18 @@
 
         function updateTotals() {
             let subtotal = 0;
+            currentOrder = {}; // Resetta l'ordine corrente
+            
             allItems.forEach(item => {
                 const quantity = parseInt($(`#qty-${item.id}`).val()) || 0;
-                subtotal += quantity * item.prezzo;
+                if (quantity > 0) {
+                    subtotal += quantity * item.prezzo;
+                    currentOrder[item.id] = {
+                        nome: item.nome,
+                        quantita: quantity,
+                        prezzo: item.prezzo
+                    };
+                }
             });
             let deliveryFee = (subtotal > 0) ? getDeliveryFee() : 0;
             const total = subtotal + deliveryFee;
@@ -162,20 +172,30 @@
             const $menuSelections = $('#menu-selections');
             let html = '';
 
+            // Funzione RENDER SECTION (Questa era GIA' CORRETTA)
             function renderSection(title, items) {
                 html += `
                     <h3 style="margin-top: 30px;">${title}</h3>
                     <div style="border-bottom: 1px solid #444;">
                 `;
                 items.forEach(item => {
+                    const hasImage = item.immagine; // Controlla se ha un'immagine
+                    
                     html += `
-                        <div class="order-list-item">
+                        <div class="order-list-item ${hasImage ? 'with-image' : ''}">`;
+                    
+                    if (hasImage) {
+                        // Aggiunge l'immagine
+                        html += `<img src="${item.immagine}" alt="${item.nome}" class="order-item-image">`;
+                    }
+
+                    html += `
                             <div class="order-item-details">
                                 <strong>${item.nome}</strong> 
                                 <span style="font-size:0.9em; color:var(--colore-primario); margin-left:10px;">(€ ${item.prezzo.toFixed(2)})</span>
                                 <p>${item.ingredienti}</p>
                             </div>
-                            <div style="display:flex; align-items:center;">
+                            <div class="order-item-quantity">
                                 <label for="qty-${item.id}" style="margin-right:10px; font-weight:normal; margin-bottom:0; color:var(--colore-testo-secondario);">Qtà:</label>
                                 <input type="number" id="qty-${item.id}" name="item-${item.id}" value="0" min="0" data-prezzo="${item.prezzo}" class="item-quantity">
                             </div>
@@ -188,86 +208,93 @@
             renderSection('Pizze', menuData.pizze);
             renderSection('Primi Piatti', menuData.primi);
             renderSection('Bevande', menuData.bevande);
+            
             $menuSelections.html(html);
 
-            // Inizializza i totali al caricamento
-            updateTotals();
+            // Listener per aggiornare totali
+            $('.item-quantity, #indirizzo').on('input change', updateTotals);
+            updateTotals(); // Calcolo iniziale
 
-            $('.item-quantity').on('change keyup', updateTotals);
-            $('#indirizzo').on('keyup change', updateTotals);
-            
+            // Gestione Modale
             const $modal = $('#summary-modal');
-            const $modalTitle = $('#modal-title');
             const $modalBody = $('#modal-body');
-            const $form = $('#order-form');
+            const $message = $('#message');
 
-            // Logica di invio MODIFICATA per il modale
-            $form.on('submit', function(e) {
-                e.preventDefault(); 
-                $('#message').text(''); 
+            $('#order-form').on('submit', function(e) {
+                e.preventDefault();
+                $message.text('');
+                updateTotals(); // Assicura che i dati siano aggiornati
+
+                const nome = $('#nome').val();
+                const indirizzo = $('#indirizzo').val();
+                const telefono = $('#telefono').val();
+                const total = $('#order-total').text();
+                const subtotal = $('#order-subtotal').text();
+                const deliveryFee = $('#delivery-fee').text();
+
+                if (Object.keys(currentOrder).length === 0) {
+                    $message.text('Il carrello è vuoto. Aggiungi almeno un prodotto.');
+                    return;
+                }
+                if (nome === '' || indirizzo === '' || telefono === '') {
+                    $message.text('Per favore, compila tutti i dati di consegna.');
+                    return;
+                }
+
+                // Popola il modale
+                let summaryHTML = `<p><strong>Nome:</strong> ${nome}</p>`;
+                summaryHTML += `<p><strong>Indirizzo:</strong> ${indirizzo}</p>`;
+                summaryHTML += `<p><strong>Telefono:</strong> ${telefono}</p>`;
+                summaryHTML += '<h4 style="margin-top:20px; color:var(--colore-primario);">Prodotti Ordinati:</h4>';
                 
-                // 1. Validazione
-                const subtotal = parseFloat($('#order-subtotal').text().replace('€ ', ''));
-                if (subtotal === 0) {
-                    $('#message').text("Per favore, seleziona almeno un articolo da ordinare.").css('color', 'red');
-                    return;
+                for (const id in currentOrder) {
+                    const item = currentOrder[id];
+                    summaryHTML += `<p>${item.quantita} x ${item.nome} - <i>(€ ${(item.quantita * item.prezzo).toFixed(2)})</i></p>`;
                 }
-                if ($('#nome').val() === '' || $('#indirizzo').val() === '' || $('#telefono').val() === '') {
-                     $('#message').text("Per favore, compila tutti i dati di consegna.").css('color', 'red');
-                    return;
-                }
-
-                // 2. Popola il Modale
-                $modalTitle.text('Riepilogo Ordine');
-                let summaryHTML = '<h3>Prodotti Ordinati:</h3><ul style="list-style: disc; margin-left: 20px;">';
-                allItems.forEach(item => {
-                    const quantity = parseInt($(`#qty-${item.id}`).val()) || 0;
-                    if (quantity > 0) {
-                        summaryHTML += `<li>${quantity} x ${item.nome} (${(quantity * item.prezzo).toFixed(2)} €)</li>`;
-                    }
-                });
-                summaryHTML += '</ul><h3 style="margin-top:20px;">Dati Consegna:</h3>';
-                summaryHTML += `<p><strong>Nome:</strong> ${$('#nome').val()}</p>`;
-                summaryHTML += `<p><strong>Indirizzo:</strong> ${$('#indirizzo').val()}</p>`;
-                summaryHTML += `<p><strong>Telefono:</strong> ${$('#telefono').val()}</p>`;
-                summaryHTML += `<p><strong>Costo Spedizione:</strong> ${$('#delivery-fee').text()}</p>`;
-                summaryHTML += `<div class="summary-total"><strong>Totale Finale:</strong> ${$('#order-total').text()}</div>`;
+                
+                summaryHTML += `<div class="summary-total" style="font-size:1.1rem; border:none; padding-top:5px; margin-top:10px;">Subtotale: ${subtotal}</div>`;
+                summaryHTML += `<div class"summary-total" style="font-size:1.1rem;">Consegna: ${deliveryFee}</div>`;
+                summaryHTML += `<div class="summary-total">Totale: ${total}</div>`;
                 
                 $modalBody.html(summaryHTML);
-                
-                // 3. Mostra il Modale
                 $modal.addClass('show');
             });
-            
-            // Chiusura Modale (Annulla/Modifica)
+
             $('#modal-cancel').on('click', () => $modal.removeClass('show'));
-            
-            // Conferma Finale 
+
             $('#modal-confirm').on('click', function() {
-                const total = $('#order-total').text();
+                // Azione finale (es. invio dati)
+                $(this).text('Invio...').prop('disabled', true);
                 
-                $modal.removeClass('show'); // Chiude il modale
-                
-                // Simula l'invio e ripristina il modulo
-                $('#message').text(`Ordine di ${total} inviato con successo! Sarai ricontattato entro 5 minuti.`).css('color', 'green');
-                setTimeout(() => $('#message').text(''), 5000); 
-                $form.trigger('reset');
-                updateTotals(); // Resetta i totali a 0.00
+                setTimeout(() => {
+                    $modal.removeClass('show');
+                    $message.text('Ordine inviato con successo! Sarai contattato a breve.').css('color', 'green');
+                    $('#order-form').trigger('reset');
+                    updateTotals();
+                    $(this).text('Conferma e Invia Ordine').prop('disabled', false);
+                }, 1500); // Simula invio
             });
 
-            // --- Gestione Cookie Banner ---
-            const cookieBanner = document.getElementById('cookie-banner');
-            const cookieAccept = document.getElementById('cookie-accept');
-            if (cookieBanner && cookieAccept) {
-                if (!localStorage.getItem('cookiesAccepted')) {
-                    // MODIFICA: Rimosso setTimeout per far apparire subito il banner
-                    cookieBanner.classList.add('show');
-                }
-                cookieAccept.addEventListener('click', () => {
-                    localStorage.setItem('cookiesAccepted', 'true');
-                    cookieBanner.classList.remove('show');
-                });
+            // Gestione Cookie/Scroll (copiato da index.html)
+            const banner = $('#cookie-banner');
+            if (!localStorage.getItem('cookiesAccepted')) {
+                setTimeout(() => banner.addClass('show'), 500);
             }
+            $('#cookie-accept').on('click', () => {
+                localStorage.setItem('cookiesAccepted', 'true');
+                banner.removeClass('show');
+            });
+            var $scrollTopBtn = $('#scroll-to-top');
+            $(window).on('scroll', function() {
+                if ($(window).scrollTop() > 300) { $scrollTopBtn.fadeIn(); } else { $scrollTopBtn.fadeOut(); }
+            });
+            $scrollTopBtn.on('click', function(e) {
+                e.preventDefault();
+                $('html, body').animate({ scrollTop: 0 }, 500); 
+            });
+             $('.menu-toggle').on('click', function() {
+                $(this).siblings('nav').find('ul').slideToggle(); 
+            });
         });
     </script>
 </body>
