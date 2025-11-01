@@ -1,66 +1,177 @@
 <!DOCTYPE html>
-<html style="font-size: 16px;" lang="it"><head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
-    <meta name="keywords" content="Thank you for your order">
-    <meta name="description" content="">
-    <title>Thank You Template</title>
-    <link rel="stylesheet" href="nicepage.css" media="screen">
-<link rel="stylesheet" href="Thank-You-Template.css" media="screen">
-    <script class="u-script" type="text/javascript" src="jquery.js" defer=""></script>
-    <script class="u-script" type="text/javascript" src="nicepage.js" defer=""></script>
-    <meta name="generator" content="Nicepage 7.9.2, nicepage.com">
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Grazie per il tuo ordine alla Pizzeria da Davide">
+  <title>Grazie - Pizzeria da Davide</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --warm-red: #DC2626;
+      --warm-red-dark: #B91C1C;
+      --dark-bg: #0F172A;
+      --dark-surface: #1E293B;
+      --dark-surface-light: #334155;
+      --text-primary: #F8FAFC;
+      --text-secondary: #CBD5E1;
+      --accent-gold: #F59E0B;
+    }
     
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--text-primary);
+    }
     
+    .font-display {
+      font-family: 'Dancing Script', cursive;
+    }
     
-    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i|Palanquin+Dark:400,500,600,700">
-    <script type="application/ld+json">{
-		"@context": "http://schema.org",
-		"@type": "Organization",
-		"name": "",
-		"sameAs": [
-				"https://facebook.com/facebook",
-				"https://twitter.com/name",
-				"https://www.instagram.com/_davide_campagna"
-		]
-}</script>
-    <meta name="theme-color" content="#478ac9">
-    <meta name="twitter:site" content="@">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Thank You Template">
-    <meta name="twitter:description" content="">
-    <meta property="og:title" content="Thank You Template">
-    <meta property="og:type" content="website">
-  <meta data-intl-tel-input-cdn-path="intlTelInput/"></head>
-  <body data-path-to-root="./" data-include-products="true" class="u-body u-xl-mode" data-lang="it"><header class="u-align-center-xs u-clearfix u-grey-80 u-header" id="sec-3fd7" data-animation-name="" data-animation-duration="0" data-animation-delay="0" data-animation-direction=""><div class="u-clearfix u-sheet u-valign-middle-lg u-valign-middle-md u-valign-middle-xs u-sheet-1">
-        <div class="u-social-icons u-social-icons-1">
-          <a class="u-social-url" title="facebook" target="_blank" href="https://facebook.com/facebook"><span class="u-icon u-social-facebook u-social-icon u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 112 112" style=""><use xlink:href="#svg-fca7"></use></svg><svg class="u-svg-content" viewBox="0 0 112 112" x="0" y="0" id="svg-fca7"><circle fill="currentColor" cx="56.1" cy="56.1" r="55"></circle><path fill="#FFFFFF" d="M73.5,31.6h-9.1c-1.4,0-3.6,0.8-3.6,3.9v8.5h12.6L72,58.3H60.8v40.8H43.9V58.3h-8V43.9h8v-9.2
-      c0-6.7,3.1-17,17-17h12.5v13.9H73.5z"></path></svg></span>
+    @keyframes checkmark {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    
+    .checkmark {
+      animation: checkmark 0.6s ease-in-out;
+    }
+  </style>
+  
+  <meta name="theme-color" content="#DC2626">
+</head>
+<body>
+  
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50" style="background-color: var(--dark-surface); box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-20">
+        <a href="index.html" class="flex items-center space-x-2">
+          <i class="fas fa-utensils text-3xl" style="color: var(--warm-red);"></i>
+          <div>
+            <div class="font-display text-2xl font-bold" style="color: var(--warm-red);">Davide's</div>
+            <div class="text-xs" style="color: var(--text-secondary);">Autentica Pizzeria</div>
+          </div>
+        </a>
+        
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="index.html" class="hover:text-red-500 transition-colors font-medium" style="color: var(--text-secondary);">Home</a>
+          <a href="ordina.html" class="hover:text-red-500 transition-colors font-medium" style="color: var(--text-secondary);">Ordina a Domicilio</a>
+          <a href="prenota.html" class="hover:text-red-500 transition-colors font-medium" style="color: var(--text-secondary);">Prenota Tavolo</a>
+          <a href="index.html#contact" class="hover:text-red-500 transition-colors font-medium" style="color: var(--text-secondary);">Contatti</a>
+        </div>
+        
+        <button id="mobile-menu-btn" class="md:hidden text-2xl" style="color: var(--warm-red);">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div id="mobile-menu" class="hidden mobile-menu md:hidden" style="background-color: var(--dark-surface); border-top: 1px solid var(--dark-surface-light);">
+      <div class="container mx-auto px-4 py-4 space-y-4">
+        <a href="index.html" class="block py-2" style="color: var(--text-secondary);">Home</a>
+        <a href="ordina.html" class="block py-2" style="color: var(--text-secondary);">Ordina a Domicilio</a>
+        <a href="prenota.html" class="block py-2" style="color: var(--text-secondary);">Prenota Tavolo</a>
+        <a href="index.html#contact" class="block py-2" style="color: var(--text-secondary);">Contatti</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="pt-32 pb-20 min-h-screen flex items-center" style="background-color: var(--dark-bg);">
+    <div class="container mx-auto px-4">
+      <div class="max-w-2xl mx-auto text-center">
+        <div class="mb-8">
+          <div class="w-32 h-32 mx-auto rounded-full flex items-center justify-center checkmark" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%);">
+            <i class="fas fa-check text-white text-6xl"></i>
+          </div>
+        </div>
+        
+        <h1 class="font-display text-5xl md:text-7xl font-bold mb-6 text-white">
+          Grazie!
+        </h1>
+        <p class="text-2xl md:text-3xl font-semibold mb-4 text-white">
+          Il tuo ordine è stato ricevuto
+        </p>
+        <p class="text-lg mb-12 max-w-xl mx-auto" style="color: var(--text-secondary);">
+          Abbiamo ricevuto il tuo ordine e lo prepareremo con cura. Riceverai una chiamata di conferma a breve. Apprezziamo la tua fiducia!
+        </p>
+        
+        <div class="grid md:grid-cols-3 gap-6 mb-12">
+          <div class="rounded-2xl p-6 shadow-lg" style="background-color: var(--dark-surface-light);">
+            <i class="fas fa-phone text-3xl mb-4" style="color: var(--warm-red);"></i>
+            <h3 class="font-bold mb-2 text-white">Conferma Ordine</h3>
+            <p class="text-sm" style="color: var(--text-secondary);">Ti chiameremo entro 10 minuti</p>
+          </div>
+          
+          <div class="rounded-2xl p-6 shadow-lg" style="background-color: var(--dark-surface-light);">
+            <i class="fas fa-clock text-3xl mb-4" style="color: var(--warm-red);"></i>
+            <h3 class="font-bold mb-2 text-white">Tempo di Consegna</h3>
+            <p class="text-sm" style="color: var(--text-secondary);">45-60 minuti</p>
+          </div>
+          
+          <div class="rounded-2xl p-6 shadow-lg" style="background-color: var(--dark-surface-light);">
+            <i class="fas fa-question-circle text-3xl mb-4" style="color: var(--warm-red);"></i>
+            <h3 class="font-bold mb-2 text-white">Domande?</h3>
+            <p class="text-sm" style="color: var(--text-secondary);">Chiama +39 391 700 3059</p>
+          </div>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="index.html" class="inline-block px-8 py-4 rounded-full font-semibold text-white transition-all hover:shadow-xl transform hover:scale-105" style="background: linear-gradient(135deg, var(--warm-red) 0%, var(--warm-red-dark) 100%);">
+            <i class="fas fa-home mr-2"></i>Torna alla Home
           </a>
-          <a class="u-social-url" title="twitter" target="_blank" href="https://twitter.com/name"><span class="u-icon u-social-icon u-social-twitter u-icon-2"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 112 112" style=""><use xlink:href="#svg-46f2"></use></svg><svg class="u-svg-content" viewBox="0 0 112 112" x="0" y="0" id="svg-46f2"><circle fill="currentColor" class="st0" cx="56.1" cy="56.1" r="55"></circle><path fill="#FFFFFF" d="M83.8,47.3c0,0.6,0,1.2,0,1.7c0,17.7-13.5,38.2-38.2,38.2C38,87.2,31,85,25,81.2c1,0.1,2.1,0.2,3.2,0.2
-      c6.3,0,12.1-2.1,16.7-5.7c-5.9-0.1-10.8-4-12.5-9.3c0.8,0.2,1.7,0.2,2.5,0.2c1.2,0,2.4-0.2,3.5-0.5c-6.1-1.2-10.8-6.7-10.8-13.1
-      c0-0.1,0-0.1,0-0.2c1.8,1,3.9,1.6,6.1,1.7c-3.6-2.4-6-6.5-6-11.2c0-2.5,0.7-4.8,1.8-6.7c6.6,8.1,16.5,13.5,27.6,14
-      c-0.2-1-0.3-2-0.3-3.1c0-7.4,6-13.4,13.4-13.4c3.9,0,7.3,1.6,9.8,4.2c3.1-0.6,5.9-1.7,8.5-3.3c-1,3.1-3.1,5.8-5.9,7.4
-      c2.7-0.3,5.3-1,7.7-2.1C88.7,43,86.4,45.4,83.8,47.3z"></path></svg></span>
-          </a>
-          <a class="u-social-url" title="instagram" target="_blank" href="https://www.instagram.com/_davide_campagna"><span class="u-icon u-social-icon u-social-instagram u-icon-3"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 112 112" style=""><use xlink:href="#svg-60bc"></use></svg><svg class="u-svg-content" viewBox="0 0 112 112" x="0" y="0" id="svg-60bc"><circle fill="currentColor" cx="56.1" cy="56.1" r="55"></circle><path fill="#FFFFFF" d="M55.9,38.2c-9.9,0-17.9,8-17.9,17.9C38,66,46,74,55.9,74c9.9,0,17.9-8,17.9-17.9C73.8,46.2,65.8,38.2,55.9,38.2
-      z M55.9,66.4c-5.7,0-10.3-4.6-10.3-10.3c-0.1-5.7,4.6-10.3,10.3-10.3c5.7,0,10.3,4.6,10.3,10.3C66.2,61.8,61.6,66.4,55.9,66.4z"></path><path fill="#FFFFFF" d="M74.3,33.5c-2.3,0-4.2,1.9-4.2,4.2s1.9,4.2,4.2,4.2s4.2-1.9,4.2-4.2S76.6,33.5,74.3,33.5z"></path><path fill="#FFFFFF" d="M73.1,21.3H38.6c-9.7,0-17.5,7.9-17.5,17.5v34.5c0,9.7,7.9,17.6,17.5,17.6h34.5c9.7,0,17.5-7.9,17.5-17.5V38.8
-      C90.6,29.1,82.7,21.3,73.1,21.3z M83,73.3c0,5.5-4.5,9.9-9.9,9.9H38.6c-5.5,0-9.9-4.5-9.9-9.9V38.8c0-5.5,4.5-9.9,9.9-9.9h34.5
-      c5.5,0,9.9,4.5,9.9,9.9V73.3z"></path></svg></span>
+          <a href="ordina.html" class="inline-block px-8 py-4 rounded-full font-semibold border-2 transition-all hover:shadow-xl transform hover:scale-105 text-white" style="border-color: var(--warm-red);">
+            <i class="fas fa-shopping-cart mr-2"></i>Ordina di Nuovo
           </a>
         </div>
-        <p class="u-align-left-lg u-align-left-md u-align-left-sm u-align-left-xl u-text u-text-1">PIZZERIA DA DAVIDE </p>
-      </div></header>
-    <section class="u-align-center u-clearfix u-container-align-center u-section-1" id="block-1">
-      <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
-        <h2 class="u-align-center u-text u-text-default u-text-1"> Thank you for your order</h2>
-        <p class="u-align-center u-text u-text-default u-text-2">Sample text. Click to select the Text Element.</p>
       </div>
-    </section>
-    
-    
-    
-    <footer class="u-align-center u-clearfix u-container-align-center u-footer u-grey-80 u-footer" id="sec-75cc"><div class="u-clearfix u-sheet u-sheet-1"></div></footer>
-    <section class="u-backlink u-clearfix u-grey-80"></section>
-  
-</body></html>
+    </div>
+  </main>
+
+  <footer class="py-12" style="background-color: #000000;">
+    <div class="container mx-auto px-4">
+      <div class="text-center mb-4">
+        <div class="flex items-center justify-center space-x-2 mb-4">
+          <i class="fas fa-utensils text-3xl" style="color: var(--accent-gold);"></i>
+          <div>
+            <div class="font-display text-2xl font-bold text-white">Davide's</div>
+            <div class="text-xs" style="color: var(--text-secondary);">Autentica Pizzeria</div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center" style="color: var(--text-secondary);">
+        <p>&copy; 2024 Pizzeria da Davide. Tutti i diritti riservati.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      
+      if (mobileMenuBtn) {
+        mobileMenuBtn.addEventListener('click', function() {
+          mobileMenu.classList.toggle('hidden');
+          const icon = this.querySelector('i');
+          icon.classList.toggle('fa-bars');
+          icon.classList.toggle('fa-times');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

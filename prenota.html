@@ -1,265 +1,454 @@
 <!DOCTYPE html>
-<html style="font-size: 16px;" lang="it">
+<html lang="it">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="utf-8">
-    <title>Prenota un Tavolo - Pizzeria da Davide</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Prenota un tavolo alla Pizzeria da Davide - Riserva la tua esperienza culinaria online">
+  <title>Prenota Tavolo - Pizzeria da Davide</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Dancing+Script:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --warm-red: #DC2626;
+      --warm-red-dark: #B91C1C;
+      --dark-bg: #0F172A;
+      --dark-surface: #1E293B;
+      --dark-surface-light: #334155;
+      --text-primary: #F8FAFC;
+      --text-secondary: #CBD5E1;
+      --accent-gold: #F59E0B;
+    }
     
-    <link rel="stylesheet" href="nicepage.css" media="screen">
-    <link rel="stylesheet" href="index.css" media="screen">
-    <link rel="stylesheet" href="style.css" media="screen"> 
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--dark-bg);
+      color: var(--text-primary);
+    }
     
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i|Palanquin+Dark:400,500,600,700">
-    <meta name="theme-color" content="#e74c3c">
+    .font-display {
+      font-family: 'Dancing Script', cursive;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    .table-slot {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .table-slot:hover:not(.reserved):not(.selected) {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      filter: invert(0.4) sepia(1) saturate(5) hue-rotate(320deg);
+    }
+
+    input, textarea {
+      background-color: var(--dark-surface-light) !important;
+      border-color: #475569 !important;
+      color: var(--text-primary) !important;
+    }
+    
+    input::placeholder, textarea::placeholder {
+      color: #64748B !important;
+    }
+  </style>
+  
+  <meta name="theme-color" content="#DC2626">
 </head>
-
-<body class="u-body u-xl-mode" data-lang="it">
-    
-    <header class="modern-header">
-        <a href="index.html" class="logo">Pizzeria <span>da Davide</span></a>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="ordina.html">Ordina a Domicilio</a></li>
-                <li><a href="prenota.html" class="active">Prenota un Tavolo</a></li>
-            </ul>
-        </nav>
-        <div class="menu-toggle">☰</div>
-    </header>
-
-    <main class="container">
-        <h1>Prenota un Tavolo</h1>
-        <p style="text-align: center; color: var(--colore-testo-secondario);">
-            Seleziona data, ora e numero di persone. I tavoli rossi sono attualmente occupati per l'orario richiesto.
-        </p>
+<body>
+  
+  <!-- Navigation -->
+  <nav class="fixed top-0 left-0 right-0 z-50" style="background-color: var(--dark-surface); box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between h-20">
+        <a href="index.html" class="flex items-center space-x-2">
+          <i class="fas fa-utensils text-3xl" style="color: var(--warm-red);"></i>
+          <div>
+            <div class="font-display text-2xl font-bold" style="color: var(--warm-red);">Davide's</div>
+            <div class="text-xs" style="color: var(--text-secondary);">Autentica Pizzeria</div>
+          </div>
+        </a>
         
-        <h2 style="margin-top: 40px;">Dettagli Prenotazione</h2>
-        <form id="reservation-form" action="#" method="POST" class="form-modern">
-            
-            <div class="form-group">
-                <label for="nome">Nome e Cognome</label>
-                <input type="text" id="nome" name="nome" required>
+        <!-- Desktop Navigation -->
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="index.html" class="hover:text-red-500 transition-colors font-medium" style="color: var(--text-secondary);">Home</a>
+          <a href="ordina.html" class="hover:text-red-500 transition-colors font-medium" style="color: var(--text-secondary);">Ordina a Domicilio</a>
+          <a href="prenota.html" class="text-base font-semibold" style="color: var(--warm-red);">Prenota Tavolo</a>
+          <a href="index.html#contact" class="hover:text-red-500 transition-colors font-medium" style="color: var(--text-secondary);">Contatti</a>
+        </div>
+        
+        <!-- Mobile menu button -->
+        <button id="mobile-menu-btn" class="md:hidden text-2xl" style="color: var(--warm-red);">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Mobile Navigation -->
+    <div id="mobile-menu" class="hidden mobile-menu md:hidden" style="background-color: var(--dark-surface); border-top: 1px solid var(--dark-surface-light);">
+      <div class="container mx-auto px-4 py-4 space-y-4">
+        <a href="index.html" class="block py-2" style="color: var(--text-secondary);">Home</a>
+        <a href="ordina.html" class="block py-2" style="color: var(--text-secondary);">Ordina a Domicilio</a>
+        <a href="prenota.html" class="block py-2 font-semibold" style="color: var(--warm-red);">Prenota Tavolo</a>
+        <a href="index.html#contact" class="block py-2" style="color: var(--text-secondary);">Contatti</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="pt-24 pb-16" style="background-color: var(--dark-bg);">
+    <div class="container mx-auto px-4 max-w-4xl">
+      <div class="text-center mb-12">
+        <h1 class="font-display text-4xl md:text-6xl font-bold mb-4 text-white">
+          Prenota il Tuo Tavolo
+        </h1>
+        <p class="text-lg" style="color: var(--text-secondary);">
+          Riserva il tuo posto per un'esperienza culinaria indimenticabile
+        </p>
+      </div>
+
+      <!-- Reservation Form -->
+      <div class="rounded-2xl shadow-2xl p-8 mb-12" style="background-color: var(--dark-surface-light);">
+        <form id="reservation-form" class="space-y-6">
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <label for="res-name" class="block font-semibold mb-2 text-white">
+                <i class="fas fa-user mr-2"></i>Nome Completo
+              </label>
+              <input type="text" id="res-name" required class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-red-500 transition-colors" placeholder="Inserisci il tuo nome">
             </div>
             
-            <div class="form-group">
-                <label for="telefono">Numero di Telefono</label>
-                <input type="tel" id="telefono" name="telefono" required>
+            <div>
+              <label for="res-phone" class="block font-semibold mb-2 text-white">
+                <i class="fas fa-phone mr-2"></i>Numero di Telefono
+              </label>
+              <input type="tel" id="res-phone" required class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-red-500 transition-colors" placeholder="+39 391 700 3059">
             </div>
+          </div>
 
-            <div class="form-group">
-                <label for="data">Data</label>
-                <input type="date" id="data" name="data" required>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <label for="res-date" class="block font-semibold mb-2 text-white">
+                <i class="fas fa-calendar mr-2"></i>Data
+              </label>
+              <input type="date" id="res-date" required class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-red-500 transition-colors">
             </div>
-
-            <div class="form-group">
-                <label for="ora">Ora</label>
-                <input type="time" id="ora" name="ora" required>
+            
+            <div>
+              <label for="res-time" class="block font-semibold mb-2 text-white">
+                <i class="fas fa-clock mr-2"></i>Orario
+              </label>
+              <input type="time" id="res-time" required class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-red-500 transition-colors">
             </div>
+          </div>
 
-            <div class="form-group">
-                <label for="persone">Numero di Persone (Max 8)</label>
-                <input type="number" id="persone" name="persone" min="1" max="8" value="2" required>
-            </div>
+          <div>
+            <label for="res-guests" class="block font-semibold mb-2 text-white">
+              <i class="fas fa-users mr-2"></i>Numero di Persone (Max 8)
+            </label>
+            <input type="number" id="res-guests" min="1" max="8" value="2" required class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-red-500 transition-colors">
+          </div>
 
-            <button type="submit" class="btn btn-primary">Verifica Disponibilità e Prenota</button>
-            <div id="reservation-message" style="color: var(--colore-primario); margin-top: 15px;"></div>
+          <div>
+            <label for="res-special" class="block font-semibold mb-2 text-white">
+              <i class="fas fa-sticky-note mr-2"></i>Richieste Speciali (Opzionale)
+            </label>
+            <textarea id="res-special" rows="3" class="w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:border-red-500 transition-colors" placeholder="Compleanno, anniversario, intolleranze alimentari, ecc."></textarea>
+          </div>
 
+          <button type="submit" class="w-full py-4 rounded-full font-semibold text-white transition-all hover:shadow-lg transform hover:scale-105" style="background: linear-gradient(135deg, var(--warm-red) 0%, var(--warm-red-dark) 100%);">
+            <i class="fas fa-search mr-2"></i>Verifica Disponibilità e Prenota
+          </button>
+          
+          <div id="res-message" class="hidden mt-4 p-4 rounded-lg text-center"></div>
         </form>
+      </div>
 
-        <h2 style="margin-top: 40px;">Mappa Tavoli (15 Tavoli)</h2>
-        <div id="table-map" class="table-map-container">
-            </div>
-
-        <p style="text-align: center; font-size: 0.9em; margin-top: 15px; color: var(--colore-testo-secondario);">
-            **NOTA:** Questa è una simulazione. I tavoli rossi (occupati) vengono generati casualmente all'apertura della pagina.
+      <!-- Restaurant Layout Info -->
+      <div class="rounded-2xl shadow-xl p-8 mb-12" style="background: linear-gradient(135deg, var(--dark-surface-light) 0%, var(--dark-surface) 100%);">
+        <h2 class="text-3xl font-bold mb-6 text-center text-white">
+          <i class="fas fa-map-marked-alt mr-3"></i>Layout del Ristorante
+        </h2>
+        <p class="text-center mb-6" style="color: var(--text-secondary);">
+          Abbiamo 15 tavoli disponibili. Scegli tra tavoli intimi da 2 persone o tavoli spaziosi da 6 persone.
         </p>
-    </main>
-
-    <footer class="u-align-center u-clearfix u-grey-80 u-footer u-footer-1" id="sec-97b7">
-        <div class="u-clearfix u-sheet u-sheet-1">
-            <p class="u-small-text u-text u-text-variant u-text-1">Pizzeria da Davide - La vera pizza a Imperia e Diano Marina.</p>
-        </div>
-    </footer>
-
-    <div id="cookie-banner">
-        <div class="cookie-content">
-            <p>Questo sito utilizza cookie tecnici per garantirti la migliore esperienza. Cliccando "Ho Capito", accetti il loro utilizzo.</p>
-            <button id="cookie-accept" class="btn btn-primary">Ho Capito</button>
-        </div>
-    </div>
-    
-    <div id="summary-modal" class="modal-overlay">
-        <div class="modal-content">
-            <h2 id="modal-title">Riepilogo Prenotazione</h2>
-            <div id="modal-body">
-                </div>
-            <div class="modal-actions">
-                <button id="modal-cancel" class="btn btn-secondary" type="button">Annulla e Modifica</button>
-                <button id="modal-confirm" class="btn btn-primary" type="button">Conferma Prenotazione</button>
-            </div>
-        </div>
-    </div>
-
-    <a href="#" id="scroll-to-top" class="btn btn-primary">↑</a>
-
-
-    <script>
-        const tavoli = [
-            { id: 1, capacita: 6, stato: 'available', nomePrenotazione: '' }, { id: 2, capacita: 6, stato: 'available', nomePrenotazione: '' }, { id: 3, capacita: 6, stato: 'available', nomePrenotazione: '' },
-            { id: 4, capacita: 6, stato: 'available', nomePrenotazione: '' }, { id: 5, capacita: 6, stato: 'available', nomePrenotazione: '' },
-            { id: 6, capacita: 5, stato: 'available', nomePrenotazione: '' }, { id: 7, capacita: 5, stato: 'available', nomePrenotazione: '' }, { id: 8, capacita: 5, stato: 'available', nomePrenotazione: '' },
-            { id: 9, capacita: 5, stato: 'available', nomePrenotazione: '' }, { id: 10, capacita: 5, stato: 'available', nomePrenotazione: '' },
-            { id: 11, capacita: 5, stato: 'available', nomePrenotazione: '' }, { id: 12, capacita: 5, stato: 'available', nomePrenotazione: '' }, { id: 13, capacita: 5, stato: 'available', nomePrenotazione: '' },
-            { id: 14, capacita: 5, stato: 'available', nomePrenotazione: '' }, { id: 15, capacita: 5, stato: 'available', nomePrenotazione: '' }
-        ];
         
-        let tavoloTrovato = null; // Variabile globale per tenere traccia del tavolo trovato prima della conferma
+        <!-- Table Availability Legend -->
+        <div class="flex flex-wrap justify-center gap-4 mb-8">
+          <div class="flex items-center">
+            <div class="w-6 h-6 rounded-full mr-2" style="background: #10B981;"></div>
+            <span class="text-sm font-semibold text-white">Disponibile</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-6 h-6 rounded-full mr-2" style="background: var(--warm-red);"></div>
+            <span class="text-sm font-semibold text-white">Prenotato</span>
+          </div>
+          <div class="flex items-center">
+            <div class="w-6 h-6 rounded-full mr-2 border-4" style="background: var(--dark-surface-light); border-color: #3B82F6;"></div>
+            <span class="text-sm font-semibold text-white">Selezionato</span>
+          </div>
+        </div>
 
-        // Funzione per simulare l'occupazione casuale iniziale all'apertura della pagina
-        function initializeTables() {
-            // Marca 3-5 tavoli come occupati casualmente
-            const reservedCount = Math.floor(Math.random() * 3) + 3; 
-            const indices = Array.from({ length: tavoli.length }, (_, i) => i);
-            
-            for (let i = 0; i < reservedCount; i++) {
-                const randomIndex = indices.splice(Math.floor(Math.random() * indices.length), 1)[0];
-                if (randomIndex !== undefined) {
-                    tavoli[randomIndex].stato = 'reserved';
-                    tavoli[randomIndex].nomePrenotazione = 'Occupato'; // Segnaposto
-                }
-            }
-        }
+        <!-- Table Map -->
+        <div id="table-map" class="grid grid-cols-3 md:grid-cols-5 gap-4">
+        </div>
+        
+        <p class="text-center text-sm mt-6" style="color: var(--text-secondary);">
+          <i class="fas fa-info-circle mr-2"></i>
+          Nota: Questo è un sistema di prenotazione simulato. La disponibilità dei tavoli è generata casualmente a scopo dimostrativo.
+        </p>
+      </div>
 
-        function renderTableMap() {
-            const $map = $('#table-map');
-            $map.empty();
-            tavoli.forEach(tavolo => {
-                const classState = tavolo.stato === 'reserved' ? 'table-reserved' : 'table-available';
-                const nome = tavolo.nomePrenotazione ? tavolo.nomePrenotazione : '';
-                $map.append(
-                    `<div id="table-${tavolo.id}" class="table-element ${classState}" data-id="${tavolo.id}" data-capacita="${tavolo.capacita}">
-                        <span>Tavolo ${tavolo.id}</span>
-                        <span class="capacity">(${tavolo.capacita} posti)</span>
-                        <span class="booking-name">${nome}</span> 
-                    </div>`
-                );
-            });
-        }
+      <!-- Info Cards -->
+      <div class="grid md:grid-cols-3 gap-6">
+        <div class="rounded-2xl p-6 shadow-lg text-center" style="background-color: var(--dark-surface-light);">
+          <i class="fas fa-clock text-4xl mb-4" style="color: var(--warm-red);"></i>
+          <h3 class="font-bold text-lg mb-2 text-white">Orari di Apertura</h3>
+          <p class="text-sm" style="color: var(--text-secondary);">
+            Lun-Gio: 17-23<br>
+            Ven-Sab: 17-00<br>
+            Domenica: 16-22
+          </p>
+        </div>
+        
+        <div class="rounded-2xl p-6 shadow-lg text-center" style="background-color: var(--dark-surface-light);">
+          <i class="fas fa-users text-4xl mb-4" style="color: var(--warm-red);"></i>
+          <h3 class="font-bold text-lg mb-2 text-white">Gruppi</h3>
+          <p class="text-sm" style="color: var(--text-secondary);">
+            Per gruppi di 8 o più persone, chiamaci direttamente per garantirti il tavolo.
+          </p>
+        </div>
+        
+        <div class="rounded-2xl p-6 shadow-lg text-center" style="background-color: var(--dark-surface-light);">
+          <i class="fas fa-exclamation-circle text-4xl mb-4" style="color: var(--warm-red);"></i>
+          <h3 class="font-bold text-lg mb-2 text-white">Cancellazione</h3>
+          <p class="text-sm" style="color: var(--text-secondary);">
+            Annulla almeno 2 ore prima se non puoi mantenere la prenotazione.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
 
-        // Ho usato $(document).ready() per coerenza con gli altri file
-        $(document).ready(function() {
-            initializeTables();
-            renderTableMap();
+  <!-- Confirmation Modal -->
+  <div id="confirm-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="max-w-md w-full p-8" style="background-color: var(--dark-surface-light); border-radius: 1rem;">
+      <div class="text-center mb-6">
+        <i class="fas fa-check-circle text-6xl mb-4" style="color: #10B981;"></i>
+        <h2 class="text-3xl font-bold text-white">Prenotazione Confermata!</h2>
+      </div>
+      
+      <div id="confirm-details" class="space-y-3 mb-6 p-4 rounded-lg" style="background: var(--dark-surface);">
+      </div>
+      
+      <button id="confirm-ok" class="w-full py-4 rounded-full font-semibold text-white transition-all hover:shadow-lg" style="background: linear-gradient(135deg, var(--warm-red) 0%, var(--warm-red-dark) 100%);">
+        <i class="fas fa-check mr-2"></i>Perfetto!
+      </button>
+    </div>
+  </div>
 
-            const $modal = $('#summary-modal');
-            const $modalTitle = $('#modal-title');
-            const $modalBody = $('#modal-body');
-            const $form = $('#reservation-form');
-            const $message = $('#reservation-message');
+  <!-- Footer -->
+  <footer class="py-12" style="background-color: #000000;">
+    <div class="container mx-auto px-4 text-center">
+      <p style="color: var(--text-secondary);">&copy; 2024 Pizzeria da Davide. Tutti i diritti riservati.</p>
+    </div>
+  </footer>
 
-            // Logica di invio MODIFICATA per il modale e la casualità
-            $form.on('submit', function(e) {
-                e.preventDefault(); 
-                $message.text(''); 
-                tavoloTrovato = null; 
+  <!-- Scroll to Top -->
+  <button id="scroll-to-top" class="fixed bottom-8 right-8 w-14 h-14 rounded-full flex items-center justify-center transition-all opacity-0 pointer-events-none z-40 shadow-lg text-white" style="background: var(--warm-red);">
+    <i class="fas fa-arrow-up text-xl"></i>
+  </button>
 
-                // 1. Validazione Form
-                if ($('#nome').val() === '' || $('#data').val() === '' || $('#ora').val() === '' || $('#telefono').val() === '') {
-                     $message.text("Per favore, compila tutti i campi obbligatori.").css('color', 'red');
-                    return;
-                }
-                
-                const persone = parseInt($('#persone').val());
-                
-                // 2. Simula rifiuto occasionale (es. 10% di probabilità)
-                if (Math.random() < 0.1) {
-                    $message.text("Spiacenti, a causa di un elevato numero di richieste, ti suggeriamo di provare a cambiare l'orario o la data.").css('color', 'red');
-                    return;
-                }
-                
-                // 3. Cerca TUTTI i tavoli disponibili che soddisfano la capacità
-                const tavoliLiberiAdatti = tavoli.filter(t => t.stato === 'available' && t.capacita >= persone);
-
-                if (tavoliLiberiAdatti.length > 0) {
-                    // 4. Scegli un tavolo a caso tra quelli adatti
-                    const randomIndex = Math.floor(Math.random() * tavoliLiberiAdatti.length);
-                    tavoloTrovato = tavoliLiberiAdatti[randomIndex]; 
-                    
-                    // 5. Popola il Modale
-                    $modalTitle.text('Riepilogo Prenotazione');
-                    let summaryHTML = `<p><strong>Nome:</strong> ${$('#nome').val()}</p>`;
-                    summaryHTML += `<p><strong>Telefono:</strong> ${$('#telefono').val()}</p>`;
-                    summaryHTML += `<p><strong>Data:</strong> ${$('#data').val()}</p>`;
-                    summaryHTML += `<p><strong>Ora:</strong> ${$('#ora').val()}</p>`;
-                    summaryHTML += `<p><strong>Persone:</strong> ${persone}</p>`;
-                    summaryHTML += `<div class="summary-total" style="border:none; padding-top:5px; margin-top:10px;"><strong>Tavolo Assegnato:</strong> Tavolo ${tavoloTrovato.id} (${tavoloTrovato.capacita} posti)</div>`;
-                    
-                    $modalBody.html(summaryHTML);
-                    
-                    // 6. Mostra il Modale
-                    $modal.addClass('show');
-
-                } else {
-                    $message.text("Spiacenti, non abbiamo tavoli liberi che possano ospitare " + persone + " persone. Prova a ridurre il numero di persone o cambia l'orario.").css('color', 'red');
-                }
-            });
-
-            // Chiusura Modale (Annulla/Modifica)
-            $('#modal-cancel').on('click', () => {
-                $modal.removeClass('show');
-                tavoloTrovato = null; // Annulla la selezione
-            });
-            
-            // Conferma Finale 
-            $('#modal-confirm').on('click', function() {
-                if (!tavoloTrovato) return; 
-                
-                const nome = $('#nome').val();
-                
-                // 1. Simula la prenotazione (ora è definitiva)
-                const tavoloIndex = tavoli.findIndex(t => t.id === tavoloTrovato.id);
-                if (tavoloIndex !== -1) {
-                    tavoli[tavoloIndex].stato = 'reserved';
-                    tavoli[tavoloIndex].nomePrenotazione = nome; 
-                }
-
-                // 2. Aggiorna la mappa visivamente
-                const $tableElement = $(`#table-${tavoloTrovato.id}`);
-                $tableElement.removeClass('table-available').addClass('table-reserved');
-                $tableElement.find('.booking-name').text(nome);
-                
-                $modal.removeClass('show'); // Chiude il modale
-                
-                // Messaggio di successo e reset
-                $message.text(`Prenotazione confermata per ${nome} al Tavolo ${tavoloTrovato.id}! Ti contatteremo a breve.`).css('color', 'green');
-                $form.trigger('reset');
-                tavoloTrovato = null; // Pulisce
-            });
-
-            // --- Gestione Cookie/Scroll/Mobile (copiato da index.html) ---
-            const $banner = $('#cookie-banner');
-            if (!localStorage.getItem('cookiesAccepted')) {
-                setTimeout(() => $banner.addClass('show'), 500);
-            }
-            $('#cookie-accept').on('click', () => {
-                localStorage.setItem('cookiesAccepted', 'true');
-                $banner.removeClass('show');
-            });
-
-            var $scrollTopBtn = $('#scroll-to-top');
-            $(window).on('scroll', function() {
-                if ($(window).scrollTop() > 300) { $scrollTopBtn.fadeIn(); } else { $scrollTopBtn.fadeOut(); }
-            });
-            $scrollTopBtn.on('click', function(e) {
-                e.preventDefault();
-                $('html, body').animate({ scrollTop: 0 }, 500); 
-            });
-            
-            $('.menu-toggle').on('click', function() {
-                $(this).siblings('nav').find('ul').slideToggle(); 
-            });
+  <script>
+    let tables = [];
+    let selectedTable = null;
+    
+    function initializeTables() {
+      tables = [];
+      const capacities = [2, 4, 4, 6, 6, 6, 6, 6, 4, 4, 4, 4, 4, 4, 4];
+      
+      capacities.forEach((capacity, index) => {
+        const isReserved = Math.random() < 0.15;
+        tables.push({
+          id: index + 1,
+          capacity: capacity,
+          reserved: isReserved,
+          reservationName: isReserved ? 'Occupato' : ''
         });
-    </script>
+      });
+    }
+
+    function renderTableMap() {
+      const mapContainer = document.getElementById('table-map');
+      let html = '';
+      
+      tables.forEach(table => {
+        let styleClass = 'border-4';
+        let textColor = 'text-white';
+        let nameDisplay = '';
+        
+        if (table.reserved) {
+          styleClass = 'bg-red-900 border-4 border-red-600';
+          textColor = 'text-white';
+          nameDisplay = table.reservationName ? `<div class="text-xs mt-1 font-semibold">${table.reservationName}</div>` : '';
+        } else if (selectedTable && selectedTable.id === table.id) {
+          styleClass = 'bg-blue-900 border-4 border-blue-600';
+          textColor = 'text-white';
+          nameDisplay = '<div class="text-xs mt-1 font-semibold">Selezionato</div>';
+        } else {
+          styleClass = 'bg-green-900 border-4 border-green-600';
+        }
+        
+        html += `
+          <div class="table-slot ${table.reserved ? 'reserved' : ''} ${selectedTable && selectedTable.id === table.id ? 'selected' : ''} ${styleClass} ${textColor} rounded-xl p-4 text-center shadow-lg cursor-pointer" 
+               onclick="selectTable(${table.id})" 
+               data-id="${table.id}"
+               data-capacity="${table.capacity}">
+            <i class="fas fa-table text-2xl mb-2"></i>
+            <div class="font-bold">Tavolo ${table.id}</div>
+            <div class="text-xs">(${table.capacity})</div>
+            ${nameDisplay}
+          </div>
+        `;
+      });
+      
+      mapContainer.innerHTML = html;
+    }
+
+    function selectTable(tableId) {
+      const table = tables.find(t => t.id === tableId);
+      if (!table.reserved) {
+        selectedTable = table;
+        renderTableMap();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeTables();
+      renderTableMap();
+      
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('res-date').setAttribute('min', today);
+      
+      const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+      const mobileMenu = document.getElementById('mobile-menu');
+      mobileMenuBtn.addEventListener('click', function() {
+        mobileMenu.classList.toggle('hidden');
+        const icon = this.querySelector('i');
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-times');
+      });
+      
+      document.getElementById('reservation-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const message = document.getElementById('res-message');
+        const name = document.getElementById('res-name').value;
+        const phone = document.getElementById('res-phone').value;
+        const date = document.getElementById('res-date').value;
+        const time = document.getElementById('res-time').value;
+        const guests = parseInt(document.getElementById('res-guests').value);
+        const special = document.getElementById('res-special').value;
+        
+        if (!name || !phone || !date || !time) {
+          message.classList.remove('hidden');
+          message.classList.add('bg-red-900', 'border', 'border-red-700', 'text-red-300');
+          message.textContent = 'Compila tutti i campi obbligatori';
+          return;
+        }
+        
+        if (Math.random() < 0.9) {
+          let assignedTable = selectedTable;
+          if (!assignedTable) {
+            const availableTables = tables.filter(t => !t.reserved && t.capacity >= guests);
+            if (availableTables.length > 0) {
+              assignedTable = availableTables[Math.floor(Math.random() * availableTables.length)];
+            }
+          }
+          
+          if (assignedTable && assignedTable.capacity >= guests) {
+            const modal = document.getElementById('confirm-modal');
+            const details = document.getElementById('confirm-details');
+            
+            const dateObj = new Date(date);
+            const formattedDate = dateObj.toLocaleDateString('it-IT', { 
+              weekday: 'long', 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+            });
+            
+            details.innerHTML = `
+              <div class="text-white"><strong>Nome:</strong> ${name}</div>
+              <div class="text-white"><strong>Telefono:</strong> ${phone}</div>
+              <div class="text-white"><strong>Data:</strong> ${formattedDate}</div>
+              <div class="text-white"><strong>Orario:</strong> ${time}</div>
+              <div class="text-white"><strong>Persone:</strong> ${guests}</div>
+              <div class="text-white"><strong>Tavolo:</strong> Tavolo ${assignedTable.id} (${assignedTable.capacity} posti)</div>
+              ${special ? `<div class="text-white"><strong>Richiesta Speciale:</strong> ${special}</div>` : ''}
+            `;
+            
+            modal.classList.remove('hidden');
+            
+            const tableIndex = tables.findIndex(t => t.id === assignedTable.id);
+            if (tableIndex !== -1) {
+              tables[tableIndex].reserved = true;
+              tables[tableIndex].reservationName = name;
+            }
+            
+            renderTableMap();
+            
+            this.reset();
+            document.getElementById('res-guests').value = 2;
+            selectedTable = null;
+          } else {
+            message.classList.remove('hidden');
+            message.classList.add('bg-red-900', 'border', 'border-red-700', 'text-red-300');
+            message.textContent = 'Spiacenti, non abbiamo tavoli disponibili per quest\'orario e numero di persone. Prova un orario o una data diversa.';
+          }
+        } else {
+          message.classList.remove('hidden');
+          message.classList.add('bg-red-900', 'border', 'border-red-700', 'text-red-300');
+          message.textContent = 'Spiacenti, stiamo registrando un forte afflusso di richieste. Riprova più tardi.';
+        }
+      });
+      
+      document.getElementById('confirm-ok').addEventListener('click', function() {
+        document.getElementById('confirm-modal').classList.add('hidden');
+        document.getElementById('res-message').classList.add('hidden');
+      });
+      
+      const scrollTopBtn = document.getElementById('scroll-to-top');
+      window.addEventListener('scroll', function() {
+        if (window.pageYOffset > 300) {
+          scrollTopBtn.classList.add('opacity-100');
+          scrollTopBtn.classList.remove('pointer-events-none');
+        } else {
+          scrollTopBtn.classList.remove('opacity-100');
+          scrollTopBtn.classList.add('pointer-events-none');
+        }
+      });
+      
+      scrollTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
 </body>
 </html>
